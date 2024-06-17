@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import DatePick from "./DatePicker.jsx";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
@@ -8,20 +8,63 @@ import "./App.css";
 
 function App() {
   const formInp = [
-    { label: "Codigo Postal" },
-    { label: "Departamento" },
-    { label: "Provincia" },
-    { label: "Ciudad" },
-    { label: "Barrio" },
-    { label: "Calle" },
-    { label: "Casa/Predio" },
-    { label: "Entre calles" },
-    { label: "N° apartamento", defaultValue: "." },
-    { label: "Urbanizacion", defaultValue: "Urbanizado" },
-    { label: "Llamada", defaultValue: "Llamar antes" },
-    { label: "Coordenadas" },
+    { id: "codigoPostal", label: "Codigo Postal", defaultValue: "" },
+    { id: "departamento", label: "Departamento", defaultValue: "" },
+    { id: "provincia", label: "Provincia", defaultValue: "" },
+    { id: "ciudad", label: "Ciudad", defaultValue: "" },
+    { id: "barrio", label: "Barrio", defaultValue: "" },
+    { id: "calle", label: "Calle", defaultValue: "" },
+    { id: "casaPredio", label: "Casa/Predio", defaultValue: "" },
+    { id: "entreCalles", label: "Entre calles", defaultValue: "" },
+    { id: "numeroApartamento", label: "N° apartamento", defaultValue: "." },
+    { id: "urbanizacion", label: "Urbanizacion", defaultValue: "Urbanizado" },
+    { id: "llamada", label: "Llamada", defaultValue: "Llamar antes" },
+    { id: "coordenadas", label: "Coordenadas", defaultValue: "" },
   ];
 
+  const initialFormValues = {};
+  formInp.forEach((inp) => {
+    initialFormValues[inp.id] = inp.defaultValue || "";
+  });
+
+  const [formValues, setFormValues] = useState(initialFormValues);
+
+  const [capitalizationApplied, setCapitalizationApplied] = useState(false);
+
+  const handleChange = (event, id) => {
+    const newValue = event.target.value;
+
+    if (
+      !capitalizationApplied &&
+      (id === "codigoPostal" ||
+        id === "departamento" ||
+        id === "provincia" ||
+        id === "ciudad" ||
+        id === "barrio")
+    ) {
+      const valuesArray = newValue.split("\t").slice(0, 5);
+
+      const capitalizedValues = valuesArray.map(
+        (value) => value.charAt(0).toUpperCase() + value.slice(1).toLowerCase()
+      );
+
+      const updatedFormValues = { ...formValues };
+
+      capitalizedValues.forEach((value, index) => {
+        updatedFormValues[formInp[index].id] = value;
+      });
+
+      setFormValues(updatedFormValues);
+      setCapitalizationApplied(true);
+    } else {
+      setFormValues((prevState) => ({
+        ...prevState,
+        [id]: newValue,
+      }));
+    }
+  };
+
+  console.log(formValues);
   const commentInp = [
     { label: "Referencia" },
     { label: "Desc. casa" },
@@ -32,10 +75,7 @@ function App() {
   ];
 
   return (
-    <div className="max-w-2xl mx-auto flex flex-col items-center mt-5 gap-5">
-      <div className="absolute h-full w-full bg-white -z-10">
-        <div className="absolute h-full w-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)]"></div>
-      </div>
+    <div className="max-w-2xl mx-auto flex flex-col items-center gap-5">
       <h2 className="text-2xl font-semibold">Llenar direcciones</h2>
       <Box
         className="flex flex-wrap justify-center bg-white"
@@ -51,7 +91,8 @@ function App() {
             key={i}
             label={inp.label}
             variant="outlined"
-            defaultValue={inp.defaultValue || ""}
+            value={formValues[inp.id]}
+            onChange={(event) => handleChange(event, inp.id)}
           />
         ))}
       </Box>

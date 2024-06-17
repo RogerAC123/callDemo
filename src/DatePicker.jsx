@@ -8,12 +8,25 @@ import "dayjs/locale/es";
 dayjs.locale("es");
 
 function DatePick() {
+  const [selectedDate, setSelectedDate] = React.useState(null);
+
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+    if (date) {
+      console.log(date.year());
+      console.log(date.month() + 1);
+      console.log(date.date());
+    }
+  };
+
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
       <DatePicker
         label="Fecha"
         views={["year", "month", "day"]}
         format={"DD-MM-YYYY"}
+        value={selectedDate}
+        onChange={handleDateChange}
       />
     </LocalizationProvider>
   );

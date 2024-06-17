@@ -52,7 +52,7 @@ function Accordions() {
   };
 
   return (
-    <div className="w-[92%] mb-5 select-none">
+    <div className="w-[92%] select-none">
       <Accordion
         expanded={expanded === "panelNoAnswer"}
         onChange={handleChange("panelNoAnswer")}
