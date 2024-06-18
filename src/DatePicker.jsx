@@ -7,11 +7,9 @@ import "dayjs/locale/es";
 
 dayjs.locale("es");
 
-function DatePick() {
-  const [selectedDate, setSelectedDate] = React.useState(null);
-
+function DatePick({ selectedDate, onDateChange }) {
   const handleDateChange = (date) => {
-    setSelectedDate(date);
+    onDateChange(date);
     if (date) {
       console.log(date.year());
       console.log(date.month() + 1);

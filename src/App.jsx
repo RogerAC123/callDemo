@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import DatePick from "./DatePicker.jsx";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
+import DatePick from "./DatePicker.jsx";
 import InputAdornment from "@mui/material/InputAdornment";
 import Accordions from "./Accordion.jsx";
+import BasicTabs from "./Tabs.jsx";
 import "./App.css";
 
 function App() {
@@ -31,6 +32,20 @@ function App() {
 
   const [capitalizationApplied, setCapitalizationApplied] = useState(false);
 
+  const connectors = ["de", "y", "en", "la", "el", "del", "con"];
+
+  const capitalizeWords = (str) => {
+    return str
+      .split(" ")
+      .map((word, index) => {
+        if (index !== 0 && connectors.includes(word.toLowerCase())) {
+          return word.toLowerCase();
+        }
+        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+      })
+      .join(" ");
+  };
+
   const handleChange = (event, id) => {
     const newValue = event.target.value;
 
@@ -44,8 +59,8 @@ function App() {
     ) {
       const valuesArray = newValue.split("\t").slice(0, 5);
 
-      const capitalizedValues = valuesArray.map(
-        (value) => value.charAt(0).toUpperCase() + value.slice(1).toLowerCase()
+      const capitalizedValues = valuesArray.map((value) =>
+        capitalizeWords(value)
       );
 
       const updatedFormValues = { ...formValues };
@@ -63,16 +78,6 @@ function App() {
       }));
     }
   };
-
-  console.log(formValues);
-  const commentInp = [
-    { label: "Referencia" },
-    { label: "Desc. casa" },
-    { label: "Telefono" },
-    { label: "Link mapa" },
-    { label: "Producto" },
-    { label: "Precio", adornment: "bob" },
-  ];
 
   return (
     <div className="max-w-2xl mx-auto flex flex-col items-center gap-5">
@@ -99,34 +104,7 @@ function App() {
 
       <h2 className="text-2xl font-semibold">Llenar comentario</h2>
 
-      <Box
-        className="flex flex-wrap justify-center bg-white"
-        component="form"
-        sx={{
-          "& > :not(style)": { m: 0.7, width: "17ch" },
-        }}
-        noValidate
-        autoComplete="off"
-      >
-        {commentInp.map((inp, i) => (
-          <TextField
-            key={i}
-            label={inp.label}
-            variant="outlined"
-            defaultValue={inp.defaultValue || ""}
-            InputProps={{
-              ...(inp.adornment && {
-                endAdornment: (
-                  <InputAdornment position="end">
-                    {inp.adornment}
-                  </InputAdornment>
-                ),
-              }),
-            }}
-          />
-        ))}
-        <DatePick />
-      </Box>
+      <BasicTabs />
 
       <Accordions />
     </div>
