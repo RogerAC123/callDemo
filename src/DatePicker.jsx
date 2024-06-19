@@ -8,15 +8,6 @@ import "dayjs/locale/es";
 dayjs.locale("es");
 
 function DatePick({ selectedDate, onDateChange }) {
-  const handleDateChange = (date) => {
-    onDateChange(date);
-    if (date) {
-      console.log(date.year());
-      console.log(date.month() + 1);
-      console.log(date.date());
-    }
-  };
-
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="es">
       <DatePicker
@@ -24,7 +15,7 @@ function DatePick({ selectedDate, onDateChange }) {
         views={["year", "month", "day"]}
         format={"DD-MM-YYYY"}
         value={selectedDate}
-        onChange={handleDateChange}
+        onChange={onDateChange}
       />
     </LocalizationProvider>
   );

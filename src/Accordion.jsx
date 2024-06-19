@@ -8,6 +8,7 @@ import dayjs from "dayjs";
 
 function Accordions() {
   const [expanded, setExpanded] = React.useState(false);
+  const [selectedText, setSelectedText] = React.useState(""); // Estado para controlar el texto seleccionado
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);

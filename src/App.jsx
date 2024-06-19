@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
-import DatePick from "./DatePicker.jsx";
-import InputAdornment from "@mui/material/InputAdornment";
 import Accordions from "./Accordion.jsx";
 import BasicTabs from "./Tabs.jsx";
+import TextArea from "./TxtArea.jsx";
+
 import "./App.css";
 
 function App() {
@@ -29,6 +29,7 @@ function App() {
   });
 
   const [formValues, setFormValues] = useState(initialFormValues);
+  const [selectedText, setSelectedText] = useState("");
 
   const [capitalizationApplied, setCapitalizationApplied] = useState(false);
 
@@ -79,6 +80,10 @@ function App() {
     }
   };
 
+  const handleItemClick = (text) => {
+    setSelectedText(text);
+  };
+
   return (
     <div className="max-w-2xl mx-auto flex flex-col items-center gap-5">
       <h2 className="text-2xl font-semibold">Llenar direcciones</h2>
@@ -104,9 +109,12 @@ function App() {
 
       <h2 className="text-2xl font-semibold">Llenar comentario</h2>
 
-      <BasicTabs />
+      <BasicTabs selectedText={selectedText} onChangeText={setSelectedText} />
 
-      <Accordions />
+      <Accordions selectedText={selectedText} onChangeText={setSelectedText} />
+
+      {/* Aquí se muestra el TextArea, que está dentro de los Tabs */}
+      {/* No es necesario moverlo aquí, sigue en su ubicación original dentro de los Tabs */}
     </div>
   );
 }
