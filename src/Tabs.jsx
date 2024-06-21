@@ -6,7 +6,7 @@ import Tab from "@mui/material/Tab";
 import InputAdornment from "@mui/material/InputAdornment";
 import Box from "@mui/material/Box";
 import DatePick from "./DatePicker";
-import TextArea from "./TxtArea";
+import TextArea from "./TextArea";
 import dayjs from "dayjs";
 import "dayjs/locale/es";
 
@@ -110,48 +110,42 @@ export default function BasicTabs() {
     let text = "";
 
     if (!isTakeGo) {
-      // Manejo de cada campo individualmente de MisEnviosEide
       MisEnviosEide.forEach((field, index) => {
         const fieldValue = misEnviosEideValues[field.id] || "";
 
-        // Formateo específico para "coordernadas"
         if (field.id === "coordernadas") {
           text += `(${fieldValue}) `;
-        }
-        // Formateo por defecto para los otros campos
-        else {
+        } else if (field.id === "entreCalles") {
+          text += ` ${fieldValue} `;
+        } else if (field.id === "precioME") {
+          text += ` ${fieldValue} bob /`;
+        } else {
           text += `${fieldValue}${
             index !== MisEnviosEide.length - 1 ? " / " : ""
           }`;
         }
       });
 
-      // Agregar la fecha formateada para "fechaME"
       const fechaME = misEnviosEideValues.fechaME;
       if (fechaME) {
         const formattedDate = formatDate(fechaME);
-        text += `/ ${formattedDate}`;
+        text += ` ${formattedDate}`;
       }
     } else {
-      // Manejo de cada campo individualmente de TakeGo
       TakeGo.forEach((field, index) => {
         const fieldValue = takeGoValues[field.id] || "";
 
-        // Formateo específico para "precioTG"
         if (field.id === "precioTG") {
-          text += `${fieldValue} bob `;
-        }
-        // Formateo por defecto para los otros campos
-        else {
+          text += `${fieldValue} bob /`;
+        } else {
           text += `${fieldValue}${index !== TakeGo.length - 1 ? " / " : ""}`;
         }
       });
 
-      // Agregar la fecha formateada para "fechaTG"
       const fechaTG = takeGoValues.fechaTG;
       if (fechaTG) {
         const formattedDate = formatDate(fechaTG);
-        text += `/ ${formattedDate}`;
+        text += ` ${formattedDate}`;
       }
     }
 
@@ -172,9 +166,12 @@ export default function BasicTabs() {
     }
 
     setTextAreaValue("");
+    if (onLimpiarCampos) {
+      onLimpiarCampos();
+    }
   };
   return (
-    <Box sx={{ width: "92%" }}>
+    <Box sx={{ width: "100%" }}>
       <Box
         sx={{
           borderBottom: 1,
@@ -188,7 +185,7 @@ export default function BasicTabs() {
           <Tab label="Take & Go" {...a11yProps(1)} />
         </Tabs>
         <button
-          className="absolute right-0 top-2 p-1 size-8 hover:scale-110 hover:backdrop-brightness-95 rounded-md"
+          className="absolute right-2 top-2 p-1 size-8 hover:scale-110 hover:backdrop-brightness-95 active:scale-90 rounded-md"
           id="limpiarCampos"
           onClick={handleLimpiarCampos}
         >
@@ -202,10 +199,10 @@ export default function BasicTabs() {
       </Box>
       <CustomTabPanel value={value} index={0}>
         <Box
-          className="flex flex-wrap justify-center bg-white"
+          className="flex flex-wrap justify-center"
           component="form"
           sx={{
-            "& > :not(style)": { m: 0.7, width: "16ch" },
+            "& > :not(style)": { m: 0.7, width: "17ch" },
           }}
           noValidate
           autoComplete="off"
@@ -236,10 +233,10 @@ export default function BasicTabs() {
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
         <Box
-          className="flex flex-wrap justify-center bg-white"
+          className="flex flex-wrap justify-center"
           component="form"
           sx={{
-            "& > :not(style)": { m: 0.7, width: "16ch" },
+            "& > :not(style)": { m: 0.7, width: "17ch" },
           }}
           noValidate
           autoComplete="off"
@@ -274,3 +271,7 @@ export default function BasicTabs() {
     </Box>
   );
 }
+
+BasicTabs.propTypes = {
+  onLimpiarCampos: PropTypes.func.isRequired,
+};

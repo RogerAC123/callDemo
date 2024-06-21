@@ -8,7 +8,6 @@ import dayjs from "dayjs";
 
 function Accordions() {
   const [expanded, setExpanded] = React.useState(false);
-  const [selectedText, setSelectedText] = React.useState(""); // Estado para controlar el texto seleccionado
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -53,7 +52,7 @@ function Accordions() {
   };
 
   return (
-    <div className="w-[92%] select-none">
+    <div className="w-[100%] select-none mb-5">
       <Accordion
         expanded={expanded === "panelNoAnswer"}
         onChange={handleChange("panelNoAnswer")}

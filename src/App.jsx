@@ -3,7 +3,6 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Accordions from "./Accordion.jsx";
 import BasicTabs from "./Tabs.jsx";
-import TextArea from "./TxtArea.jsx";
 
 import "./App.css";
 
@@ -29,7 +28,6 @@ function App() {
   });
 
   const [formValues, setFormValues] = useState(initialFormValues);
-  const [selectedText, setSelectedText] = useState("");
 
   const [capitalizationApplied, setCapitalizationApplied] = useState(false);
 
@@ -80,15 +78,11 @@ function App() {
     }
   };
 
-  const handleItemClick = (text) => {
-    setSelectedText(text);
-  };
-
   return (
-    <div className="max-w-2xl mx-auto flex flex-col items-center gap-5">
+    <div className="max-w-2xl mx-auto flex flex-col items-center gap-5 mt-5">
       <h2 className="text-2xl font-semibold">Llenar direcciones</h2>
       <Box
-        className="flex flex-wrap justify-center bg-white"
+        className="flex flex-wrap justify-center"
         component="form"
         sx={{
           "& > :not(style)": { m: 0.7, width: "17ch" },
@@ -108,13 +102,8 @@ function App() {
       </Box>
 
       <h2 className="text-2xl font-semibold">Llenar comentario</h2>
-
-      <BasicTabs selectedText={selectedText} onChangeText={setSelectedText} />
-
-      <Accordions selectedText={selectedText} onChangeText={setSelectedText} />
-
-      {/* Aquí se muestra el TextArea, que está dentro de los Tabs */}
-      {/* No es necesario moverlo aquí, sigue en su ubicación original dentro de los Tabs */}
+      <BasicTabs />
+      <Accordions />
     </div>
   );
 }

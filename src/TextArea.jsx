@@ -12,7 +12,8 @@ export default function TextArea({ text, onChangeText }) {
 
   return (
     <Textarea
-      placeholder="Comentario..."
+      sx={{ margin: 1 }}
+      placeholder="Comentario"
       value={text || ""}
       onChange={handleTextChange}
       minRows={2}
