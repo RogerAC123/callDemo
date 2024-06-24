@@ -80,7 +80,7 @@ function App() {
 
   return (
     <div className="max-w-2xl mx-auto flex flex-col items-center gap-5 mt-5">
-      <h2 className="text-2xl font-semibold">Llenar direcciones</h2>
+      <h2 className="text-2xl font-semibold">Dirección</h2>
       <Box
         className="flex flex-wrap justify-center"
         component="form"
@@ -101,7 +101,7 @@ function App() {
         ))}
       </Box>
 
-      <h2 className="text-2xl font-semibold">Llenar comentario</h2>
+      <h2 className="text-2xl font-semibold">Comentario</h2>
       <BasicTabs />
       <Accordions />
     </div>

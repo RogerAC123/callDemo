@@ -5,12 +5,33 @@ import TextField from "@mui/material/TextField";
 import Tab from "@mui/material/Tab";
 import InputAdornment from "@mui/material/InputAdornment";
 import Box from "@mui/material/Box";
+import Autocomplete from "@mui/material/Autocomplete";
 import DatePick from "./DatePicker";
 import TextArea from "./TextArea";
 import dayjs from "dayjs";
 import "dayjs/locale/es";
 
 dayjs.locale("es");
+
+const productos = [
+  { label: "1 Poweronix", value: 290 },
+  { label: "3 Poweronix", value: 500 },
+  { label: "5 Poweronix", value: 750 },
+  { label: "7 Poweronix", value: 1000 },
+  { label: "9 Poweronix", value: 1250 },
+
+  { label: "1 Lutevid", value: 290 },
+  { label: "3 Lutevid", value: 500 },
+  { label: "5 Lutevid", value: 750 },
+  { label: "7 Lutevid", value: 1000 },
+  { label: "9 Lutevid", value: 1250 },
+
+  { label: "1 Oxys", value: 320 },
+  { label: "3 Oxys", value: 560 },
+  { label: "5 Oxys", value: 840 },
+  { label: "7 Oxys", value: 1120 },
+  { label: "9 Oxys", value: 1400 },
+];
 
 const TakeGo = [
   { id: "referenciaCercana", label: "Referencia cercana" },
@@ -69,20 +90,33 @@ export default function BasicTabs() {
     setValue(newValue);
   };
 
-  const handleInputChange = (event, id, isTakeGo) => {
+  const handleInputChange = (event, id, isTakeGo, isProduct) => {
     const newValue = event.target.value;
+    let updatedFormValues;
     if (isTakeGo) {
-      const updatedFormValues = {
+      updatedFormValues = {
         ...formValuesTakeGo,
         [id]: newValue,
       };
+      if (isProduct) {
+        const product = productos.find((p) => p.label === newValue);
+        if (product) {
+          updatedFormValues.precioTG = product.value;
+        }
+      }
       setFormValuesTakeGo(updatedFormValues);
       updateTextAreaValue(updatedFormValues, formValuesMisEnviosEide, isTakeGo);
     } else {
-      const updatedFormValues = {
+      updatedFormValues = {
         ...formValuesMisEnviosEide,
         [id]: newValue,
       };
+      if (isProduct) {
+        const product = productos.find((p) => p.label === newValue);
+        if (product) {
+          updatedFormValues.precioME = product.value;
+        }
+      }
       setFormValuesMisEnviosEide(updatedFormValues);
       updateTextAreaValue(formValuesTakeGo, updatedFormValues, isTakeGo);
     }
@@ -118,7 +152,7 @@ export default function BasicTabs() {
         } else if (field.id === "entreCalles") {
           text += ` ${fieldValue} `;
         } else if (field.id === "precioME") {
-          text += ` ${fieldValue} bob /`;
+          text += `${fieldValue} bob /`;
         } else {
           text += `${fieldValue}${
             index !== MisEnviosEide.length - 1 ? " / " : ""
@@ -134,9 +168,18 @@ export default function BasicTabs() {
     } else {
       TakeGo.forEach((field, index) => {
         const fieldValue = takeGoValues[field.id] || "";
+        if (!fieldValue) return;
 
         if (field.id === "precioTG") {
           text += `${fieldValue} bob /`;
+        } else if (field.id === "referenciaCercana") {
+          text += `${fieldValue} `;
+        } else if (field.id === "descCasaTG") {
+          text += `${fieldValue} `;
+        } else if (field.id === "linkMapaTG") {
+          text += `/ ${fieldValue} / `;
+        } else if (field.id === "telefonoTG") {
+          text += `/ ${fieldValue} `;
         } else {
           text += `${fieldValue}${index !== TakeGo.length - 1 ? " / " : ""}`;
         }
@@ -170,6 +213,7 @@ export default function BasicTabs() {
       onLimpiarCampos();
     }
   };
+
   return (
     <Box sx={{ width: "100%" }}>
       <Box
@@ -207,24 +251,43 @@ export default function BasicTabs() {
           noValidate
           autoComplete="off"
         >
-          {MisEnviosEide.map((inp, i) => (
-            <TextField
-              key={i}
-              label={inp.label}
-              variant="outlined"
-              value={formValuesMisEnviosEide[inp.id] || ""}
-              onChange={(event) => handleInputChange(event, inp.id, false)}
-              InputProps={{
-                ...(inp.adornment && {
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      {inp.adornment}
-                    </InputAdornment>
-                  ),
-                }),
-              }}
-            />
-          ))}
+          {MisEnviosEide.map((inp, i) =>
+            inp.id === "productoME" ? (
+              <Autocomplete
+                key={i}
+                options={productos.map((p) => p.label)}
+                value={formValuesMisEnviosEide[inp.id] || ""}
+                onChange={(event, newValue) =>
+                  handleInputChange(
+                    { target: { value: newValue } },
+                    inp.id,
+                    false,
+                    true
+                  )
+                }
+                renderInput={(params) => (
+                  <TextField {...params} label={inp.label} variant="outlined" />
+                )}
+              />
+            ) : (
+              <TextField
+                key={i}
+                label={inp.label}
+                variant="outlined"
+                value={formValuesMisEnviosEide[inp.id] || ""}
+                onChange={(event) => handleInputChange(event, inp.id, false)}
+                InputProps={{
+                  ...(inp.adornment && {
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        {inp.adornment}
+                      </InputAdornment>
+                    ),
+                  }),
+                }}
+              />
+            )
+          )}
           <DatePick
             selectedDate={formValuesMisEnviosEide.fechaME || null}
             onDateChange={(date) => handleDateChange(date, false)}
@@ -241,24 +304,43 @@ export default function BasicTabs() {
           noValidate
           autoComplete="off"
         >
-          {TakeGo.map((inp, i) => (
-            <TextField
-              key={i}
-              label={inp.label}
-              variant="outlined"
-              value={formValuesTakeGo[inp.id] || ""}
-              onChange={(event) => handleInputChange(event, inp.id, true)}
-              InputProps={{
-                ...(inp.adornment && {
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      {inp.adornment}
-                    </InputAdornment>
-                  ),
-                }),
-              }}
-            />
-          ))}
+          {TakeGo.map((inp, i) =>
+            inp.id === "productoTG" ? (
+              <Autocomplete
+                key={i}
+                options={productos.map((p) => p.label)}
+                value={formValuesTakeGo[inp.id] || ""}
+                onChange={(event, newValue) =>
+                  handleInputChange(
+                    { target: { value: newValue } },
+                    inp.id,
+                    true,
+                    true
+                  )
+                }
+                renderInput={(params) => (
+                  <TextField {...params} label={inp.label} variant="outlined" />
+                )}
+              />
+            ) : (
+              <TextField
+                key={i}
+                label={inp.label}
+                variant="outlined"
+                value={formValuesTakeGo[inp.id] || ""}
+                onChange={(event) => handleInputChange(event, inp.id, true)}
+                InputProps={{
+                  ...(inp.adornment && {
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        {inp.adornment}
+                      </InputAdornment>
+                    ),
+                  }),
+                }}
+              />
+            )
+          )}
           <DatePick
             selectedDate={formValuesTakeGo.fechaTG || null}
             onDateChange={(date) => handleDateChange(date, true)}
