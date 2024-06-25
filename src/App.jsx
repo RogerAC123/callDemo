@@ -29,8 +29,6 @@ function App() {
 
   const [formValues, setFormValues] = useState(initialFormValues);
 
-  const [capitalizationApplied, setCapitalizationApplied] = useState(false);
-
   const connectors = ["de", "y", "en", "la", "el", "del", "con"];
 
   const capitalizeWords = (str) => {
@@ -47,34 +45,25 @@ function App() {
 
   const handleChange = (event, id) => {
     const newValue = event.target.value;
+    const capitalizedValue = capitalizeWords(newValue);
+    const updatedFormValues = { ...formValues, [id]: capitalizedValue };
+    setFormValues(updatedFormValues);
 
     if (
-      !capitalizationApplied &&
-      (id === "codigoPostal" ||
-        id === "departamento" ||
-        id === "provincia" ||
-        id === "ciudad" ||
-        id === "barrio")
+      id === "codigoPostal" ||
+      id === "departamento" ||
+      id === "provincia" ||
+      id === "ciudad" ||
+      id === "barrio"
     ) {
-      const valuesArray = newValue.split("\t").slice(0, 5);
+      const valuesArray = capitalizedValue.split("\t").slice(0, 5);
+      const updatedValues = { ...updatedFormValues };
 
-      const capitalizedValues = valuesArray.map((value) =>
-        capitalizeWords(value)
-      );
-
-      const updatedFormValues = { ...formValues };
-
-      capitalizedValues.forEach((value, index) => {
-        updatedFormValues[formInp[index].id] = value;
+      valuesArray.forEach((value, index) => {
+        updatedValues[formInp[index].id] = capitalizeWords(value);
       });
 
-      setFormValues(updatedFormValues);
-      setCapitalizationApplied(true);
-    } else {
-      setFormValues((prevState) => ({
-        ...prevState,
-        [id]: newValue,
-      }));
+      setFormValues(updatedValues);
     }
   };
 
