@@ -82,6 +82,10 @@ function App() {
     setTextAreaValue(updatedTextAreaValue);
   };
 
+  const handleTextUpdate = (text) => {
+    setTextAreaValue(text);
+  };
+
   const handleLimpiarCampos = () => {
     const clearedFormValues = {};
     formInp.forEach((inp) => {
@@ -125,7 +129,7 @@ function App() {
       <Box className="w-full">
         <TextArea text={textAreaValue} onChangeText={setTextAreaValue} />
       </Box>
-      <Accordions textAreaValue={textAreaValue} />
+      <Accordions onTextUpdate={handleTextUpdate} />
     </div>
   );
 }

@@ -7,7 +7,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import dayjs from "dayjs";
 import PropTypes from "prop-types";
 
-function Accordions({ textAreaValue }) {
+function Accordions({ onTextUpdate }) {
   const [expanded, setExpanded] = React.useState(false);
 
   const handleChange = (panel) => (event, isExpanded) => {
@@ -26,10 +26,10 @@ function Accordions({ textAreaValue }) {
       `contesta y cuelga sin informacion ${formattedDate}`,
     ],
     RECALL: [
-      `cliente indica llamar el ${formattedDate} a las 15hrs`,
-      `cliente indica estar ocupado llamar el ${formattedDate} a las 15hrs`,
-      `cliente indica estar conduciendo llamar el ${formattedDate} a las 15hrs`,
-      `cliente indica estar en su trabajo llamar el ${formattedDate} a las 15hrs`,
+      `cliente indica llamar el ${formattedDate} a las 15 hrs`,
+      `cliente indica estar ocupado llamar el ${formattedDate} a las 15 hrs`,
+      `cliente indica estar conduciendo llamar el ${formattedDate} a las 15 hrs`,
+      `cliente indica estar en su trabajo llamar el ${formattedDate} a las 15 hrs`,
     ],
     REJECT: [
       "cliente indica estar de viaje volver a ingresar en la pagina web",
@@ -50,6 +50,10 @@ function Accordions({ textAreaValue }) {
       "cliente indica que el numero esta equivocado",
       "orden de broma",
     ],
+  };
+
+  const handleClick = (text) => {
+    onTextUpdate(text);
   };
 
   return (
@@ -73,6 +77,7 @@ function Accordions({ textAreaValue }) {
               <Typography
                 className="hover:bg-slate-200 px-2 py-1 rounded-md"
                 key={`NoAnswer_${i}`}
+                onClick={() => handleClick(item)}
               >
                 {item}
               </Typography>
@@ -100,6 +105,7 @@ function Accordions({ textAreaValue }) {
               <Typography
                 className="hover:bg-slate-200 px-2 py-1 rounded-md"
                 key={`RECALL_${i}`}
+                onClick={() => handleClick(item)}
               >
                 {item}
               </Typography>
@@ -127,6 +133,7 @@ function Accordions({ textAreaValue }) {
               <Typography
                 className="hover:bg-slate-200 px-2 py-1 rounded-md"
                 key={`REJECT_${i}`}
+                onClick={() => handleClick(item)}
               >
                 {item}
               </Typography>
@@ -154,6 +161,7 @@ function Accordions({ textAreaValue }) {
               <Typography
                 className="hover:bg-slate-200 px-2 py-1 rounded-md"
                 key={`TRASH_${i}`}
+                onClick={() => handleClick(item)}
               >
                 {item}
               </Typography>
