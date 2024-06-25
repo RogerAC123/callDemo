@@ -7,8 +7,8 @@ import InputAdornment from "@mui/material/InputAdornment";
 import Box from "@mui/material/Box";
 import Autocomplete from "@mui/material/Autocomplete";
 import DatePick from "./DatePicker";
-import TextArea from "./TextArea";
 import dayjs from "dayjs";
+
 import "dayjs/locale/es";
 
 dayjs.locale("es");
@@ -80,7 +80,7 @@ function a11yProps(index) {
   };
 }
 
-export default function BasicTabs() {
+const BasicTabs = ({ onTabInputChange, onLimpiarCampos }) => {
   const [value, setValue] = useState(0);
   const [formValuesTakeGo, setFormValuesTakeGo] = useState({});
   const [formValuesMisEnviosEide, setFormValuesMisEnviosEide] = useState({});
@@ -193,6 +193,8 @@ export default function BasicTabs() {
     }
 
     setTextAreaValue(text.trim());
+    // Llamar a la función del componente padre para actualizar el TextArea en App.jsx
+    onTabInputChange(text.trim());
   };
 
   const formatDate = (date) => {
@@ -209,9 +211,8 @@ export default function BasicTabs() {
     }
 
     setTextAreaValue("");
-    if (onLimpiarCampos) {
-      onLimpiarCampos();
-    }
+    // Llamar a la función del componente padre para limpiar los campos en App.jsx
+    onLimpiarCampos();
   };
 
   return (
@@ -347,13 +348,13 @@ export default function BasicTabs() {
           />
         </Box>
       </CustomTabPanel>
-      <Box className="mt-4">
-        <TextArea text={textAreaValue} onChangeText={setTextAreaValue} />
-      </Box>
     </Box>
   );
-}
+};
 
 BasicTabs.propTypes = {
+  onTabInputChange: PropTypes.func.isRequired,
   onLimpiarCampos: PropTypes.func.isRequired,
 };
+
+export default BasicTabs;

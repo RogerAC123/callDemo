@@ -5,8 +5,9 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import dayjs from "dayjs";
+import PropTypes from "prop-types";
 
-function Accordions() {
+function Accordions({ textAreaValue }) {
   const [expanded, setExpanded] = React.useState(false);
 
   const handleChange = (panel) => (event, isExpanded) => {
@@ -180,5 +181,9 @@ function Accordions() {
     </div>
   );
 }
+
+Accordions.propTypes = {
+  textAreaValue: PropTypes.string.isRequired,
+};
 
 export default Accordions;

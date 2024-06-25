@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Accordions from "./Accordion.jsx";
 import BasicTabs from "./Tabs.jsx";
-
+import TextArea from "./TextArea.jsx";
 import "./App.css";
 
 function App() {
@@ -28,6 +28,8 @@ function App() {
   });
 
   const [formValues, setFormValues] = useState(initialFormValues);
+  const [textAreaValue, setTextAreaValue] = useState("");
+  const [capitalizationApplied, setCapitalizationApplied] = useState(false);
 
   const connectors = ["de", "y", "en", "la", "el", "del", "con"];
 
@@ -45,26 +47,51 @@ function App() {
 
   const handleChange = (event, id) => {
     const newValue = event.target.value;
-    const capitalizedValue = capitalizeWords(newValue);
-    const updatedFormValues = { ...formValues, [id]: capitalizedValue };
-    setFormValues(updatedFormValues);
 
     if (
-      id === "codigoPostal" ||
-      id === "departamento" ||
-      id === "provincia" ||
-      id === "ciudad" ||
-      id === "barrio"
+      !capitalizationApplied &&
+      (id === "codigoPostal" ||
+        id === "departamento" ||
+        id === "provincia" ||
+        id === "ciudad" ||
+        id === "barrio")
     ) {
-      const valuesArray = capitalizedValue.split("\t").slice(0, 5);
-      const updatedValues = { ...updatedFormValues };
+      const valuesArray = newValue.split("\t").slice(0, 5);
 
-      valuesArray.forEach((value, index) => {
-        updatedValues[formInp[index].id] = capitalizeWords(value);
+      const capitalizedValues = valuesArray.map((value) =>
+        capitalizeWords(value)
+      );
+
+      const updatedFormValues = { ...formValues };
+
+      capitalizedValues.forEach((value, index) => {
+        updatedFormValues[formInp[index].id] = value;
       });
 
-      setFormValues(updatedValues);
+      setFormValues(updatedFormValues);
+      setCapitalizationApplied(true);
+    } else {
+      setFormValues((prevState) => ({
+        ...prevState,
+        [id]: newValue,
+      }));
     }
+  };
+
+  const handleTabInputChange = (updatedTextAreaValue) => {
+    setTextAreaValue(updatedTextAreaValue);
+  };
+
+  const handleLimpiarCampos = () => {
+    const clearedFormValues = {};
+    formInp.forEach((inp) => {
+      clearedFormValues[inp.id] =
+        inp.defaultValue !== undefined ? inp.defaultValue : "";
+    });
+
+    setFormValues(clearedFormValues);
+    setTextAreaValue("");
+    setCapitalizationApplied(false);
   };
 
   return (
@@ -91,8 +118,14 @@ function App() {
       </Box>
 
       <h2 className="text-2xl font-semibold">Comentario</h2>
-      <BasicTabs />
-      <Accordions />
+      <BasicTabs
+        onTabInputChange={handleTabInputChange}
+        onLimpiarCampos={handleLimpiarCampos}
+      />
+      <Box className="w-full">
+        <TextArea text={textAreaValue} onChangeText={setTextAreaValue} />
+      </Box>
+      <Accordions textAreaValue={textAreaValue} />
     </div>
   );
 }
