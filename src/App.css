@@ -2,3 +2,15 @@ body {
   width: 100%;
   height: 100dvh;
 }
+
+.mask-flag {
+  -webkit-mask-composite: source-in;
+  mask-image: url(assets/maskflag.webp);
+  mask-position: 50%;
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-clip: content-box;
+  mask-origin: content-box;
+  mask-composite: source-in;
+  mask-mode: alpha;
+}

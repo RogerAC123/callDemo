@@ -7,30 +7,57 @@ import InputAdornment from "@mui/material/InputAdornment";
 import Box from "@mui/material/Box";
 import Autocomplete from "@mui/material/Autocomplete";
 import DatePick from "./DatePicker";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Switch from "@mui/material/Switch";
+import IconButton from "@mui/material/IconButton";
+import DeleteIcon from "@mui/icons-material/Delete";
 import dayjs from "dayjs";
 
 import "dayjs/locale/es";
 
 dayjs.locale("es");
 
+const prices = { poweronix: 250, lutevid: 250, oxys: 280 };
+const pricesPost = { poweronix: 230, lutevid: 230, oxys: 230 };
+
 const productos = [
-  { label: "1 Poweronix", value: 290 },
-  { label: "3 Poweronix", value: 500 },
-  { label: "5 Poweronix", value: 750 },
-  { label: "7 Poweronix", value: 1000 },
-  { label: "9 Poweronix", value: 1250 },
+  { label: "1 Poweronix", value: prices.poweronix + 40 },
+  { label: "3 Poweronix", value: prices.poweronix * 2 },
+  { label: "5 Poweronix", value: prices.poweronix * 3 },
+  { label: "7 Poweronix", value: prices.poweronix * 4 },
+  { label: "9 Poweronix", value: prices.poweronix * 5 },
 
-  { label: "1 Lutevid", value: 290 },
-  { label: "3 Lutevid", value: 500 },
-  { label: "5 Lutevid", value: 750 },
-  { label: "7 Lutevid", value: 1000 },
-  { label: "9 Lutevid", value: 1250 },
+  { label: "1 Lutevid", value: prices.lutevid + 40 },
+  { label: "3 Lutevid", value: prices.lutevid * 2 },
+  { label: "5 Lutevid", value: prices.lutevid * 3 },
+  { label: "7 Lutevid", value: prices.lutevid * 4 },
+  { label: "9 Lutevid", value: prices.lutevid * 5 },
 
-  { label: "1 Oxys", value: 320 },
-  { label: "3 Oxys", value: 560 },
-  { label: "5 Oxys", value: 840 },
-  { label: "7 Oxys", value: 1120 },
-  { label: "9 Oxys", value: 1400 },
+  { label: "1 Oxys", value: prices.oxys + 40 },
+  { label: "3 Oxys", value: prices.oxys * 2 },
+  { label: "5 Oxys", value: prices.oxys * 3 },
+  { label: "7 Oxys", value: prices.oxys * 4 },
+  { label: "9 Oxys", value: prices.oxys * 5 },
+];
+
+const productosPost = [
+  { label: "1 Poweronix", value: pricesPost.poweronix + 40 },
+  { label: "3 Poweronix", value: pricesPost.poweronix * 2 },
+  { label: "5 Poweronix", value: pricesPost.poweronix * 3 },
+  { label: "7 Poweronix", value: pricesPost.poweronix * 4 },
+  { label: "9 Poweronix", value: pricesPost.poweronix * 5 },
+
+  { label: "1 Lutevid", value: pricesPost.lutevid + 40 },
+  { label: "3 Lutevid", value: pricesPost.lutevid * 2 },
+  { label: "5 Lutevid", value: pricesPost.lutevid * 3 },
+  { label: "7 Lutevid", value: pricesPost.lutevid * 4 },
+  { label: "9 Lutevid", value: pricesPost.lutevid * 5 },
+
+  { label: "1 Oxys", value: pricesPost.oxys + 40 },
+  { label: "3 Oxys", value: pricesPost.oxys * 2 },
+  { label: "5 Oxys", value: pricesPost.oxys * 3 },
+  { label: "7 Oxys", value: pricesPost.oxys * 4 },
+  { label: "9 Oxys", value: pricesPost.oxys * 5 },
 ];
 
 const TakeGo = [
@@ -84,10 +111,14 @@ const BasicTabs = ({ onTabInputChange, onLimpiarCampos }) => {
   const [value, setValue] = useState(0);
   const [formValuesTakeGo, setFormValuesTakeGo] = useState({});
   const [formValuesMisEnviosEide, setFormValuesMisEnviosEide] = useState({});
-  const [textAreaValue, setTextAreaValue] = useState("");
+  const [postSaleActive, setPostSaleActive] = useState(false);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
+  };
+
+  const handleSwitchChange = (event) => {
+    setPostSaleActive(event.target.checked);
   };
 
   const handleInputChange = (event, id, isTakeGo, isProduct) => {
@@ -101,7 +132,9 @@ const BasicTabs = ({ onTabInputChange, onLimpiarCampos }) => {
       if (isProduct) {
         const product = productos.find((p) => p.label === newValue);
         if (product) {
-          updatedFormValues.precioTG = product.value;
+          updatedFormValues.precioTG = postSaleActive
+            ? productosPost.find((p) => p.label === newValue).value
+            : product.value;
         }
       }
       setFormValuesTakeGo(updatedFormValues);
@@ -114,7 +147,9 @@ const BasicTabs = ({ onTabInputChange, onLimpiarCampos }) => {
       if (isProduct) {
         const product = productos.find((p) => p.label === newValue);
         if (product) {
-          updatedFormValues.precioME = product.value;
+          updatedFormValues.precioME = postSaleActive
+            ? productosPost.find((p) => p.label === newValue).value
+            : product.value;
         }
       }
       setFormValuesMisEnviosEide(updatedFormValues);
@@ -142,6 +177,7 @@ const BasicTabs = ({ onTabInputChange, onLimpiarCampos }) => {
 
   const updateTextAreaValue = (takeGoValues, misEnviosEideValues, isTakeGo) => {
     let text = "";
+    const prefix = postSaleActive ? "post sale " : "";
 
     if (!isTakeGo) {
       MisEnviosEide.forEach((field, index) => {
@@ -150,7 +186,7 @@ const BasicTabs = ({ onTabInputChange, onLimpiarCampos }) => {
         if (field.id === "coordernadas") {
           text += `(${fieldValue}) `;
         } else if (field.id === "entreCalles") {
-          text += ` ${fieldValue} `;
+          text += `${fieldValue} `;
         } else if (field.id === "precioME") {
           text += `${fieldValue} bob /`;
         } else {
@@ -192,9 +228,7 @@ const BasicTabs = ({ onTabInputChange, onLimpiarCampos }) => {
       }
     }
 
-    setTextAreaValue(text.trim());
-    // Llamar a la función del componente padre para actualizar el TextArea en App.jsx
-    onTabInputChange(text.trim());
+    onTabInputChange(prefix + text.trim());
   };
 
   const formatDate = (date) => {
@@ -210,13 +244,28 @@ const BasicTabs = ({ onTabInputChange, onLimpiarCampos }) => {
       updateTextAreaValue(formValuesMisEnviosEide, {});
     }
 
-    setTextAreaValue("");
-    // Llamar a la función del componente padre para limpiar los campos en App.jsx
     onLimpiarCampos();
   };
 
   return (
     <Box sx={{ width: "100%" }}>
+      <Box className="flex mx-auto justify-between w-[90%]">
+        <FormControlLabel
+          control={
+            <Switch checked={postSaleActive} onChange={handleSwitchChange} />
+          }
+          label="Post Sale"
+          className="select-none"
+        />
+        <IconButton
+          id="limpiarCampos"
+          onClick={handleLimpiarCampos}
+          aria-label="delete"
+          color="error"
+        >
+          <DeleteIcon fontSize="inherit" />
+        </IconButton>
+      </Box>
       <Box
         sx={{
           borderBottom: 1,
@@ -229,18 +278,6 @@ const BasicTabs = ({ onTabInputChange, onLimpiarCampos }) => {
           <Tab label="Mis envios e Ide courier" {...a11yProps(0)} />
           <Tab label="Take & Go" {...a11yProps(1)} />
         </Tabs>
-        <button
-          className="absolute right-2 top-2 p-1 size-8 hover:scale-110 hover:backdrop-brightness-95 active:scale-90 rounded-md"
-          id="limpiarCampos"
-          onClick={handleLimpiarCampos}
-        >
-          <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-            <path
-              d="m6 2 2-2h4l2 2h4v2H2V2h4zM3 6h14l-1 14H4L3 6zm5 2v10h1V8H8zm3 0v10h1V8h-1z"
-              fill="#e30000"
-            />
-          </svg>
-        </button>
       </Box>
       <CustomTabPanel value={value} index={0}>
         <Box
