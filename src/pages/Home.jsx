@@ -10,7 +10,8 @@ function Home() {
     const top = window.innerHeight / 2 - alto / 2;
     const opciones = `width=${ancho},height=${alto},left=${left},top=${top}`;
 
-    window.open(url, "_blank", opciones);
+    const fullPath = `${window.location.origin}${url}`;
+    window.open(fullPath, "_blank", opciones);
   };
 
   const handleAbrirVentana = (event) => {
@@ -23,7 +24,7 @@ function Home() {
       <Box className=" flex flex-col w-full items-center gap-7">
         <Typography variant="h3">Campañas</Typography>
         <a
-          href="/bolivia"
+          href={`${window.location.origin}/bolivia`}
           className="relative group"
           onClick={handleAbrirVentana}
         >
